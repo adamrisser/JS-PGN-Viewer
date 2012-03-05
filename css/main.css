@@ -1,0 +1,33 @@
+
+.board {
+    width:  600px;
+    height: 600px;
+    border: 1px solid #000;
+}
+
+.file {
+    float: left;
+    height: 12.5%;
+    width: 100%;
+}
+
+.cell {
+    float: left;
+    width:  12.5%;
+    height: 100%;
+}
+
+.file:nth-child(even) .cell:nth-child(odd),
+.file:nth-child(odd)  .cell:nth-child(even) {
+    background-color: #74BFED;
+}
+
+.file:nth-child(even) .cell:nth-child(even),
+.file:nth-child(odd)  .cell:nth-child(odd) {
+    background-color: #D9F0FF;
+}
+
+.piece {
+    width:  50px;
+    height: 50px;
+}
