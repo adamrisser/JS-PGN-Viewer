@@ -6,6 +6,23 @@ define(['backbone', 'move'], function (Backbone, Move) {
     
     var PGN = Backbone.Model.extend({
         
+        initialize: function (config) {
+            
+            this.set({
+                
+                /**
+                 * Actual game moves
+                 * @type {Collection}
+                 * @property
+                 */
+                //TODO: figure out why i can't do this in the defaults
+                // if I do, it gets shared between all pgn instances
+                moves: new MovesCollection(),
+                
+                isAlternateLine: !!(config &&config.isAlternateLine)
+            });
+        },
+        
         defaults: {
             
             /**
@@ -127,11 +144,11 @@ define(['backbone', 'move'], function (Backbone, Move) {
             eventdate: null,
             
             /**
-             * Actual game moves
-             * @type {Collection}
+             * Whether or not this is a complete PGN or just an alternate
+             * line.
              * @property
              */
-            moves: new MovesCollection()
+            isAlternateLine: false
         },
         
         /**

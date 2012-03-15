@@ -10,12 +10,13 @@ require.config({
         'tmpl' : 'js/plugins/tmpl',
         
         // js
-        'underscore': 'js/ext/underscore',
-        'backbone'  : 'js/ext/backbone',
-        'jquery'    : 'js/ext/jquery',
-        'bootstrap' : 'js/app/bootstrap',
-        'board'     : 'js/app/board',
-        'pgnparser' : 'js/util/pgnparser',
+        'underscore' : 'js/ext/underscore',
+        'backbone'   : 'js/ext/backbone',
+        'jquery'     : 'js/ext/jquery',
+        'bootstrap'  : 'js/app/bootstrap',
+        'board'      : 'js/app/board',
+        'pgnparser'  : 'js/util/pgnparser',
+        'regexhelper': 'js/util/regexhelper',
         
         // models
         'pgn' : 'js/model/pgn',
