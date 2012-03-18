@@ -2,17 +2,16 @@
  * Create the chess board
  * @module
  */
-define(['backbone', 'jquery', 'tmpl!boardTmpl'], function (Backbone, $, render) {
+define(['backbone', 'jquery', 'tmpl!boardtmpl'], function (Backbone, $, htmlTmpl) {
     
     /**
      * Center an element over another element
-     * @plugin
      */
     $.fn.moveTo = function (el) {
         var offset = el.offset();
         
-        offset.top  = offset.top  + (this.height() / 4);
-        offset.left = offset.left + (this.width()  / 4); 
+        offset.top  += this.height() / 4;
+        offset.left += this.width()  / 4; 
         
         this.offset(offset);
     };
@@ -32,10 +31,11 @@ define(['backbone', 'jquery', 'tmpl!boardTmpl'], function (Backbone, $, render) 
     var Board = Backbone.View.extend({
         
         /**
-         * Parent element
+         * Board html
+         * @type {HTMLElement}
          * @property
          */
-        el: 'body',
+        html: null,
         
         /**
          * Initialize the board
@@ -43,7 +43,7 @@ define(['backbone', 'jquery', 'tmpl!boardTmpl'], function (Backbone, $, render) 
          */
         initialize: function () {
             var self = this,
-                html = $(self.render());
+                html = self.html = $(htmlTmpl());
             
             // cache the piece selectors
             self.lite = {
@@ -90,50 +90,6 @@ define(['backbone', 'jquery', 'tmpl!boardTmpl'], function (Backbone, $, render) 
                     self.squares[rank+file] = html.find('.' + rank+file)
                 }); 
             });
-            
-            // attach to the DOM
-            this.$el.append(html);
-            
-            // position the pieces where they belong
-            // white pieces
-            self.lite.rook1.moveTo(self.squares.a1);
-            self.lite.knight1.moveTo(self.squares.b1);
-            self.lite.bishop1.moveTo(self.squares.c1);
-            self.lite.queen.moveTo(self.squares.d1);
-            self.lite.king.moveTo(self.squares.e1);
-            self.lite.bishop2.moveTo(self.squares.f1);
-            self.lite.knight2.moveTo(self.squares.g1);
-            self.lite.rook2.moveTo(self.squares.h1);
-            
-            // lite pawns
-            self.lite.pawn1.moveTo(self.squares.a2);
-            self.lite.pawn2.moveTo(self.squares.b2);
-            self.lite.pawn3.moveTo(self.squares.c2);
-            self.lite.pawn4.moveTo(self.squares.d2);
-            self.lite.pawn5.moveTo(self.squares.e2);
-            self.lite.pawn6.moveTo(self.squares.f2);
-            self.lite.pawn7.moveTo(self.squares.g2);
-            self.lite.pawn8.moveTo(self.squares.h2);
-            
-            // dark pieces
-            self.dark.rook1.moveTo(self.squares.a8);
-            self.dark.knight1.moveTo(self.squares.b8);
-            self.dark.bishop1.moveTo(self.squares.c8);
-            self.dark.queen.moveTo(self.squares.d8);
-            self.dark.king.moveTo(self.squares.e8);
-            self.dark.bishop2.moveTo(self.squares.f8);
-            self.dark.knight2.moveTo(self.squares.g8);
-            self.dark.rook2.moveTo(self.squares.h8);
-            
-            // dark pawns
-            self.dark.pawn1.moveTo(self.squares.a7);
-            self.dark.pawn2.moveTo(self.squares.b7);
-            self.dark.pawn3.moveTo(self.squares.c7);
-            self.dark.pawn4.moveTo(self.squares.d7);
-            self.dark.pawn5.moveTo(self.squares.e7);
-            self.dark.pawn6.moveTo(self.squares.f7);
-            self.dark.pawn7.moveTo(self.squares.g7);
-            self.dark.pawn8.moveTo(self.squares.h7);
         },
         
         /**
@@ -181,11 +137,59 @@ define(['backbone', 'jquery', 'tmpl!boardTmpl'], function (Backbone, $, render) 
          * Render the board
          * @method
          */
-        render: render
+        render: function () {
+            var self = this,
+                lite = self.lite,
+                dark = self.dark,
+                squares = self.squares;
+            
+            self.$el.append(self.html);
+            
+            // position the pieces where they belong
+            // white pieces
+            lite.rook1.moveTo(squares.a1);
+            lite.knight1.moveTo(squares.b1);
+            lite.bishop1.moveTo(squares.c1);
+            lite.queen.moveTo(squares.d1);
+            lite.king.moveTo(squares.e1);
+            lite.bishop2.moveTo(squares.f1);
+            lite.knight2.moveTo(squares.g1);
+            lite.rook2.moveTo(squares.h1);
+            
+            // lite pawns
+            lite.pawn1.moveTo(squares.a2);
+            lite.pawn2.moveTo(squares.b2);
+            lite.pawn3.moveTo(squares.c2);
+            lite.pawn4.moveTo(squares.d2);
+            lite.pawn5.moveTo(squares.e2);
+            lite.pawn6.moveTo(squares.f2);
+            lite.pawn7.moveTo(squares.g2);
+            lite.pawn8.moveTo(squares.h2);
+            
+            // dark pieces
+            dark.rook1.moveTo(squares.a8);
+            dark.knight1.moveTo(squares.b8);
+            dark.bishop1.moveTo(squares.c8);
+            dark.queen.moveTo(squares.d8);
+            dark.king.moveTo(squares.e8);
+            dark.bishop2.moveTo(squares.f8);
+            dark.knight2.moveTo(squares.g8);
+            dark.rook2.moveTo(squares.h8);
+            
+            // dark pawns
+            dark.pawn1.moveTo(squares.a7);
+            dark.pawn2.moveTo(squares.b7);
+            dark.pawn3.moveTo(squares.c7);
+            dark.pawn4.moveTo(squares.d7);
+            dark.pawn5.moveTo(squares.e7);
+            dark.pawn6.moveTo(squares.f7);
+            dark.pawn7.moveTo(squares.g7);
+            dark.pawn8.moveTo(squares.h7);
+        }
         
     });
     
     // export
-    return new Board();
+    return Board;
     
 });

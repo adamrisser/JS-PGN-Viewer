@@ -1,5 +1,7 @@
 define(['pgn', 'move'], function (PGN, Move) {
     
+    "use strict";
+    
     var PGNParser = {
         
         /**
@@ -233,12 +235,13 @@ define(['pgn', 'move'], function (PGN, Move) {
                 
                 // nothing left to parse?
                 if (pgnStr.length < 1) {
+                    console.log('Parsing Complete!');
                     break;
                 }
                 
                 // break out of loop if no rule matched
                 if (pgnStr === prev) {
-                    //console.error('Invalid PGN: Unknown error');
+                    console.error('Invalid PGN: Unknown error');
                     break;
                 }
                 

@@ -15,6 +15,7 @@ require.config({
         'jquery'     : 'js/ext/jquery',
         'bootstrap'  : 'js/app/bootstrap',
         'board'      : 'js/app/board',
+        'gamedetails': 'js/app/gamedetails',
         'pgnparser'  : 'js/util/pgnparser',
         'regexhelper': 'js/util/regexhelper',
         
@@ -23,7 +24,8 @@ require.config({
         'move': 'js/model/move',
         
         // html
-        'boardTmpl': 'html/board.html'
+        'boardtmpl'      : 'html/board.html',
+        'gamedetailstmpl': 'html/gamedetails.html'
     }
 });
 
