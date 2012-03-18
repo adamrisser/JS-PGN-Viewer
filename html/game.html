@@ -1,0 +1,17 @@
+
+
+<div class="game">
+    <div class="leftgutter">
+        <% for (var i = 8; i > 0; i--) { %>
+            <div class="gutter"><%= i %></div>
+        <% } %>
+    </div>
+    
+    <div class="board"></div>
+    
+    <div class="bottomgutter">
+        <% _.each(['A','B','C','D','E','F','G','H'], function (letter) { %>
+            <div class="gutter"><%= letter %></div>
+        <% }); %>
+    </div>
+</div>

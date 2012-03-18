@@ -1,4 +1,4 @@
-define(['board', 'gamedetails', 'pgnparser'], function (Board, GameDetails, pgnparser) {
+define(['board', 'game', 'pgnparser'], function (Board, Game, pgnparser) {
     
     var _test = '[Event "Botvinnik Memorial"]' + 
                 '[Site "Moscow"]' + 
@@ -24,24 +24,16 @@ define(['board', 'gamedetails', 'pgnparser'], function (Board, GameDetails, pgnp
                 'Nxe6 1/2-1/2';
     
     var pgn = pgnparser.parse(_test),
-        parent = $('.game'),
         
-        gameDetails = new GameDetails({
-            model: pgn,
-            el: parent
-        }),
-        
-        chessBoard = new Board({
-            model: pgn,
-            el: parent
+        game = new Game({
+            el: $('body'),
+            model: pgn
         });
     
-    gameDetails.render();
-    
-    chessBoard.render();
+    game.render();
     
     return {
-        chessBoard: chessBoard
+        game: game
     };
      
 });

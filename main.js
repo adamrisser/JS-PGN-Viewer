@@ -14,6 +14,7 @@ require.config({
         'backbone'   : 'js/ext/backbone',
         'jquery'     : 'js/ext/jquery',
         'bootstrap'  : 'js/app/bootstrap',
+        'game'       : 'js/app/game',
         'board'      : 'js/app/board',
         'gamedetails': 'js/app/gamedetails',
         'pgnparser'  : 'js/util/pgnparser',
@@ -24,6 +25,7 @@ require.config({
         'move': 'js/model/move',
         
         // html
+        'gametmpl'       : 'html/game.html',
         'boardtmpl'      : 'html/board.html',
         'gamedetailstmpl': 'html/gamedetails.html'
     }
