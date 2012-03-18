@@ -1,55 +1,50 @@
 define(['pgn', 'move'], function (PGN, Move) {
     
-    /**
-     * Valid PGN tags
-     * @private
-     */
-    var _validTags = ['event', 'site', 'date', 'round', 'white', 'black', 
-        'result', 'eco', 'whiteelo', 'blackelo', 'plycount', 'eventdate'];
-    
-    /**
-     * Regular expression matches
-     * @private
-     */
-    var RE = {
-        TAG: new RegExp(/\[([^\]]*)\s"([^\]]*)"\]/),
-        NAG: new RegExp(/^\$([\d]){1,3}/),
-        STARTMOVE: new RegExp(/(^[\d]+)[\.](?!\.)/),
-        BLACKMOVE: new RegExp(/(^[\d]+)[\.]{3}/),
-        COMMENT:   new RegExp(/^\{([^\}]*)\}/),
-        ALTERNATE: new RegExp(/^\(([^\)]*)\)/),
-        ALTERNATESTART: new RegExp(/(\()/),
-        ALTERNATEEND:   new RegExp(/(\))/),
-        MOVE: new RegExp(/^(?:[KQRNBP]?[a-h]?[1-8]?x?[a-h][1-8](?:\=[KQRNBP])?|O(-?O){1,2})[\+#]?(\s*[\!\?]+)?/)
-    };
-    
-    /**
-     * Given a string that starts with a paren, find the next matching
-     * paren and return it as a substring with the set of parens trimmed
-     * @param  {String} str  
-     * @return {String} substring of str
-     */
-    var _findMatchingParen = function (str) {
-        var i = 0, chr, left = 0, right = 0;
-        
-        while (chr = str.charAt(i++)) {
-            
-            if (RE.ALTERNATESTART.test(chr)) {
-                left++; 
-            }
-            else if (RE.ALTERNATEEND.test(chr)) {
-                right++;
-            }
-            
-            if (left == right && left != 0) {
-                return str.substring(1, i-1);
-            }
-        }
-        
-        return '';
-    };
-    
     var PGNParser = {
+        
+        /**
+         * Regular expression matches
+         * @type {Object<Regex>}
+         * @property
+         */
+        RE: {
+            TAG: new RegExp(/\[([^\]]*)\s"([^\]]*)"\]/),
+            NAG: new RegExp(/^\$([\d]){1,3}/),
+            STARTMOVE: new RegExp(/(^[\d]+)[\.](?!\.)/),
+            BLACKMOVE: new RegExp(/(^[\d]+)[\.]{3}/),
+            COMMENT:   new RegExp(/^\{([^\}]*)\}/),
+            ALTERNATE: new RegExp(/^\(([^\)]*)\)/),
+            ALTERNATESTART: new RegExp(/(\()/),
+            ALTERNATEEND:   new RegExp(/(\))/),
+            MOVE: new RegExp(/^(?:[KQRNBP]?[a-h]?[1-8]?x?[a-h][1-8](?:\=[KQRNBP])?|O(-?O){1,2})[\+#]?(\s*[\!\?]+)?/),
+            END:  new RegExp(/(1\/2-1\/2|1-0|0-1)/)
+        },
+        
+        /**
+         * Given a string that starts with a paren, find the next matching
+         * paren and return it as a substring with the set of parens trimmed
+         * @param  {String} str  
+         * @return {String} substring of str
+         */
+        findMatchingParen: function (str) {
+            var i = 0, chr, left = 0, right = 0;
+            
+            while (chr = str.charAt(i++)) {
+                
+                if (this.RE.ALTERNATESTART.test(chr)) {
+                    left++; 
+                }
+                else if (this.RE.ALTERNATEEND.test(chr)) {
+                    right++;
+                }
+                
+                if (left == right && left != 0) {
+                    return str.substring(1, i-1);
+                }
+            }
+            
+            return '';
+        },
         
         /**
          * Rules based off of which alphabet is found
@@ -65,7 +60,10 @@ define(['pgn', 'move'], function (PGN, Move) {
              */
             tag: function (match, pgn) {
                 var name = match[1].toLowerCase(), 
-                    val  = match[2];
+                    val  = match[2],
+                    validTags = ['event', 'site', 'date', 'round', 'white', 
+                        'black', 'result', 'eco', 'whiteelo', 'blackelo', 
+                        'plycount', 'eventdate'];
                 
                 // nothing? invalid
                 if (!name || !val) {
@@ -74,7 +72,7 @@ define(['pgn', 'move'], function (PGN, Move) {
                 }
                 
                 // unknown tag?
-                if (!~_validTags.indexOf(name)) {
+                if (!~validTags.indexOf(name)) {
                     console.error('Invalid PGN: Unknown tag ' + name);
                     return;
                 }
@@ -179,7 +177,9 @@ define(['pgn', 'move'], function (PGN, Move) {
          */
         parse: function (pgnStr) {
             
-            var match, prev, pgn = new PGN();
+            var match, prev, 
+                pgn = new PGN(),
+                RE = this.RE;
             
             while (true) {
                 
@@ -221,20 +221,24 @@ define(['pgn', 'move'], function (PGN, Move) {
                 
                 // alternate line
                 else if (match = pgnStr.match(RE.ALTERNATE)) {
-                    var altStr = _findMatchingParen(pgnStr);
+                    var altStr = this.findMatchingParen(pgnStr);
                     this.RULES.alternate(altStr, pgn);
                     pgnStr = pgnStr.replace('('+altStr+')', '').trim();
                 }
                 
-                // Nothing left to parse?
+                // game decision
+                else if (match = pgnStr.match(RE.END)) {
+                    break;
+                }
+                
+                // nothing left to parse?
                 if (pgnStr.length < 1) {
-                    console.log('Parsing Complete!');
                     break;
                 }
                 
                 // break out of loop if no rule matched
                 if (pgnStr === prev) {
-                    console.error('Invalid PGN: Unknown error');
+                    //console.error('Invalid PGN: Unknown error');
                     break;
                 }
                 
